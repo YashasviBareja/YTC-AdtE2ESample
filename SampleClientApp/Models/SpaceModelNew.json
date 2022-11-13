@@ -1,7 +1,7 @@
 {
-  "@id": "dtmi:contosocom:DigitalTwins:Microgrid;1",
+  "@id": "dtmi:contosocom:DigitalTwins:HouseModel;1",
   "@type": "Interface",
-  "displayName": "MicrogridModel",
+  "displayName": "HouseModel",
   "@context": "dtmi:dtdl:context;2",
   "contents": [
     {
@@ -16,17 +16,7 @@
     },
     {
       "@type": "Property",
-      "name": "FirmwareVersion",
-      "schema": "string"
-    },
-    {
-      "@type": "Property",
-      "name": "Temperature",
-      "schema": "double"
-    },
-    {
-      "@type": "Property",
-      "name": "ComfortIndex",
+      "name": "Power",
       "schema": "double"
     },
     {
@@ -48,8 +38,8 @@
     },
     {
       "@type": "Relationship",
-      "name": "serves",
-      "displayName": "serves",
+      "name": "contained",
+      "displayName": "contained",
       "properties": [
         {
           "name": "ownershipUser",

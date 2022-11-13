@@ -16,17 +16,7 @@
     },
     {
       "@type": "Property",
-      "name": "FirmwareVersion",
-      "schema": "string"
-    },
-    {
-      "@type": "Property",
-      "name": "Temperature",
-      "schema": "double"
-    },
-    {
-      "@type": "Property",
-      "name": "ComfortIndex",
+      "name": "Power",
       "schema": "double"
     },
     {

@@ -60,7 +60,7 @@ namespace SampleFunctionsApp
                     log.LogInformation($"Reading event from {twinId}: {eventGridEvent.EventType}: {message["data"]}");
 
                     //Find and update parent Twin
-                   // string parentId = await AdtUtilities.FindParentAsync(client, twinId, "contains", log);
+                    // string parentId = await AdtUtilities.FindParentAsync(client, twinId, "contains", log);
                     //string parentId = await AdtUtilities.FindParentAsync(client, twinId, "serves", log);
                     //if (parentId != null)
                     //{
@@ -81,7 +81,40 @@ namespace SampleFunctionsApp
                     //        }
                     //    }
                     //}
-                    
+
+                    foreach (var operation in message["data"]["patch"])
+                    {
+                        string opValue = (string)operation["op"];
+                        if (opValue.Equals("replace"))
+                        {
+                            string propertyPath = ((string)operation["path"]);
+                            double valueRetrieved = 0;
+                            BasicDigitalTwin twin;
+                            Response<BasicDigitalTwin> twinResponse = await client.GetDigitalTwinAsync<BasicDigitalTwin>("test2");
+                            twin = twinResponse.Value;
+                            Console.WriteLine($"Model id: {twin.Metadata.ModelId}");
+                            foreach (string prop in twin.Contents.Keys)
+                            {
+                                if(prop == "Power")
+                                {
+                                    if (twin.Contents.TryGetValue(prop, out object value))
+                                    {
+                                        valueRetrieved = Double.Parse(value.ToString()) + 3;
+                                        break;
+
+                                    }
+                                        Console.WriteLine($"Property '{prop}': {value}");
+                                }
+                               
+                            }
+
+                            if (twinId=="test1" && propertyPath.Equals("/Power"))
+                            {
+                                await AdtUtilities.UpdateTwinPropertyAsync(client, "test2", propertyPath, valueRetrieved, log);
+                            }
+                        }
+                    }
+
                     List<string> parentIds = await AdtUtilities.FindParentAsync(client, twinId, "serves", log);
 
                     foreach(string parentId in parentIds)
@@ -98,7 +131,7 @@ namespace SampleFunctionsApp
 
                                     double powerToHouse = operation["value"].Value<float>() / 5;
 
-                                    if (propertyPath.Equals("/Temperature"))
+                                    if (propertyPath.Equals("/Power"))
                                     {
                                         await AdtUtilities.UpdateTwinPropertyAsync(client, parentId, propertyPath, powerToHouse, log);
                                     }

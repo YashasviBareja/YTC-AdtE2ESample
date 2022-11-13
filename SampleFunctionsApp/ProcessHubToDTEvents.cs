@@ -41,13 +41,13 @@ namespace SampleFunctionsApp
                 // Reading deviceId and temperature for IoT Hub JSON
                 JObject deviceMessage = (JObject)JsonConvert.DeserializeObject(eventGridEvent.Data.ToString());
                 string deviceId = (string)deviceMessage["systemProperties"]["iothub-connection-device-id"];
-                var temperature = deviceMessage["body"]["Temperature"];
+                var power = deviceMessage["body"]["Power"];
 
-                log.LogInformation($"Device:{deviceId} Temperature is:{temperature}");
+                log.LogInformation($"Device:{deviceId} Power is:{power}");
 
                 //Update twin using device temperature
                 var updateTwinData = new JsonPatchDocument();
-                updateTwinData.AppendReplace("/Temperature", temperature.Value<double>());
+                updateTwinData.AppendReplace("/Power", power.Value<double>());
 
                 deviceId = "Microgrid";
                 await client.UpdateDigitalTwinAsync(deviceId, updateTwinData);
